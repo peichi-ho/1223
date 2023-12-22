@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Roller</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+    th, td {
+      border: 1px solid black; /* Cell borders */
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dice Roller</h1>
+  <button id="rollButton">Roll Dice</button>
+  <div id="diceContainer1"></div>
+  <div id="diceContainer2"></div>
+  <h2>Frequency Table</h2>
+  <table id="frequencyTable">
+    <tr>
+      <th>Face</th>
+      <th>Probability</th>
+    </tr>
+  </table>
+
+  <script>
+    window.addEventListener("load", start, false);
+
+    function start() {
+      var button = document.getElementById("rollButton");
+      button.addEventListener("click", rollDice, false);
+    }
+
+
+    function rollDice() {
+      // Clear previous rolls
+      var diceContainer1 = document.getElementById("diceContainer1");
+      var diceContainer2 = document.getElementById("diceContainer2");
+      diceContainer1.innerHTML = '';
+      diceContainer2.innerHTML = '';
+
+      // Arrays to store the count of each face for each roll
+      var faceCount1 = [0, 0, 0, 0, 0, 0];
+      var faceCount2 = [0, 0, 0, 0, 0, 0];
+
+      for (var i = 0; i < 6; i++) {
+        var dieNumber = i + 1;
+        var face = Math.floor(Math.random() * 6) + 1;
+        setImage(dieNumber, face, diceContainer1);
+        faceCount1[face - 1]++;
+      }
+
+      // Roll 6 dice for the second roll
+      for (var i = 0; i < 6; i++) {
+        var dieNumber = i + 7; // Start from 7 for the second roll
+        var face = Math.floor(Math.random() * 6) + 1;
+        setImage(dieNumber, face, diceContainer2);
+        faceCount2[face - 1]++;
+      }
+
+      // Update the frequency table
+      updateFrequencyTable(faceCount1, faceCount2);
+    }
+
+    function setImage(dieNumber, face, container) {
+      var img = document.createElement("img");
+      img.src = "die" + face + ".png"; // You need to have dice images with filenames like dice_face_1.png, dice_face_2.png, etc.
+      img.alt = "Die " + dieNumber;
+      container.appendChild(img);
+    }
+
+    function updateFrequencyTable(faceCount1, faceCount2) {
+      var table = document.getElementById("frequencyTable");
+      table.innerHTML = '<tr><th>Face</th><th>Probability</th></tr>';
+
+      for (var i = 0; i < 6; i++) {
+        var face = i + 1;
+        var count1 = faceCount1[i];
+        var count2 = faceCount2[i];
+        var totalCount = count1 + count2;
+        var probability = totalCount / 12 * 100; // Calculate probability as a percentage
+        probability = probability.toFixed(2); // Round to 2 decimal places
+
+        var row = table.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+       
+
+        cell1.textContent = face;
+        cell2.textContent = probability + "%";
+      }
+    }
+  </script>
+</body>
+</html>
